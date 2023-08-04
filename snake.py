@@ -23,6 +23,17 @@ class Snake:
         self.body = [pygame.Rect(self.x - BLOCK_SIZE, self.y, BLOCK_SIZE, BLOCK_SIZE)]
         self.dead = False
 
+    # For movement
+    def update(self):
+        # Move every square in our snake body one square forward
+        # Temporarily add the head to the body to then remove it
+        self.body.append(self.head)
+        for i in range(len(self.body) - 1):
+            self.body[i].x, self.body[i].y = self.body[i + 1].x, self.body[i + 1].y
+        self.head.x += self.xdir * BLOCK_SIZE
+        self.head.y += self.ydir * BLOCK_SIZE
+        self.body.remove(self.head)
+
 
 def drawGrid():
     for x in range(0, SW, BLOCK_SIZE):
@@ -42,11 +53,17 @@ while True:
             pygame.quit()
             sys.exit()
 
-    # Draw the snake; head first and then body
+    # "Reset" the screen in order to remove old states of the snake
+    screen.fill("black")
+    drawGrid()
+
+    # Draw the snake; head first and then body, and then add movement with the update method
     pygame.draw.rect(screen, "green", snake.head)
 
     for square in snake.body:
         pygame.draw.rect(screen, "green", square)
+
+    snake.update()
 
     pygame.display.update()
     clock.tick(10)
