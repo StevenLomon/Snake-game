@@ -12,6 +12,18 @@ pygame.display.set_caption("Snake!")
 clock = pygame.time.Clock()
 
 
+class Apple:
+    def __init__(self):
+        # Scaled in order to fit the grid
+        self.x = int(random.randint(0, SW) / BLOCK_SIZE) * BLOCK_SIZE
+        self.y = int(random.randint(0, SH) / BLOCK_SIZE) * BLOCK_SIZE
+        self.rect = pygame.Rect(self.x, self.y, BLOCK_SIZE, BLOCK_SIZE)
+
+    # Will draw an apple on the screen
+    def update(self):
+        pygame.draw.rect(screen, "red", self.rect)
+
+
 class Snake:
     def __init__(self):
         self.x, self.y = BLOCK_SIZE, BLOCK_SIZE
@@ -45,6 +57,7 @@ def drawGrid():
 drawGrid()
 
 snake = Snake()
+apple = Apple()
 
 while True:
     # Event loop
@@ -67,13 +80,15 @@ while True:
     screen.fill("black")
     drawGrid()
 
-    # Draw the snake; head first and then body, and then add movement with the update method
+    # Draw the snake; head first and then body
     pygame.draw.rect(screen, "green", snake.head)
 
     for square in snake.body:
         pygame.draw.rect(screen, "green", square)
 
+    # Add movement to the snake and spawn an apple
     snake.update()
+    apple.update()
 
     pygame.display.update()
     clock.tick(10)
