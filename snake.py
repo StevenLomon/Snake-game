@@ -90,5 +90,14 @@ while True:
     snake.update()
     apple.update()
 
+    # Eating logic
+    if snake.head.x == apple.x and snake.head.y == apple.y:
+        # Create a new square at the position of the head for the snake body
+        snake.body.append(
+            pygame.Rect(snake.head.x, snake.head.y, BLOCK_SIZE, BLOCK_SIZE)
+        )
+        # Spawn a new apple
+        apple = Apple()
+
     pygame.display.update()
     clock.tick(10)
