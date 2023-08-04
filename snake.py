@@ -52,6 +52,16 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        # User input
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                snake.xdir, snake.ydir = 1, 0
+            if event.key == pygame.K_LEFT:
+                snake.xdir, snake.ydir = -1, 0
+            if event.key == pygame.K_DOWN:
+                snake.xdir, snake.ydir = 0, 1
+            if event.key == pygame.K_UP:
+                snake.xdir, snake.ydir = 0, -1
 
     # "Reset" the screen in order to remove old states of the snake
     screen.fill("black")
