@@ -37,6 +37,13 @@ class Snake:
 
     # For movement
     def update(self):
+        # Death condition
+        for square in self.body:
+            if self.head.x == square.x and self.head.y == square.y:
+                self.dead = True
+        if self.head.x not in range(0, SW) or self.head.y not in range(0, SH):
+            self.dead = True
+
         # Move every square in our snake body one square forward
         # Temporarily add the head to the body to then remove it
         self.body.append(self.head)
@@ -93,11 +100,23 @@ while True:
     # Eating logic
     if snake.head.x == apple.x and snake.head.y == apple.y:
         # Create a new square at the position of the head for the snake body
-        snake.body.append(
-            pygame.Rect(snake.head.x, snake.head.y, BLOCK_SIZE, BLOCK_SIZE)
-        )
+        snake.body.append(pygame.Rect(square.x, square.y, BLOCK_SIZE, BLOCK_SIZE))
         # Spawn a new apple
         apple = Apple()
+
+    # If we die
+    if snake.dead:
+        # Create a new snake
+        snake.x, snake.y = BLOCK_SIZE, BLOCK_SIZE
+        # Snake will move to the right when the game stars
+        snake.xdir = 1
+        snake.ydir = 0
+
+        snake.head = pygame.Rect(snake.x, snake.y, BLOCK_SIZE, BLOCK_SIZE)
+        snake.body = [
+            pygame.Rect(snake.x - BLOCK_SIZE, snake.y, BLOCK_SIZE, BLOCK_SIZE)
+        ]
+        snake.dead = False
 
     pygame.display.update()
     clock.tick(10)
