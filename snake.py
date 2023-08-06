@@ -54,6 +54,12 @@ class Snake:
         self.body.remove(self.head)
 
 
+def messageToScreen(display, sw, sh, msg, color, y_displace=0):
+    message = FONT.render(msg, True, color)
+    message_rect = message.get_rect(center=(sw / 2, sh / y_displace))
+    display.blit(message, message_rect)
+
+
 def drawGrid():
     for x in range(0, SW, BLOCK_SIZE):
         for y in range(0, SH, BLOCK_SIZE):
@@ -104,19 +110,30 @@ while True:
         # Spawn a new apple
         apple = Apple()
 
-    # If we die
-    if snake.dead:
-        # Create a new snake
-        snake.x, snake.y = BLOCK_SIZE, BLOCK_SIZE
-        # Snake will move to the right when the game stars
-        snake.xdir = 1
-        snake.ydir = 0
+    # Score
+    messageToScreen(screen, SW, SH, f"{len(snake.body) - 1}", "white", 10)
 
-        snake.head = pygame.Rect(snake.x, snake.y, BLOCK_SIZE, BLOCK_SIZE)
-        snake.body = [
-            pygame.Rect(snake.x - BLOCK_SIZE, snake.y, BLOCK_SIZE, BLOCK_SIZE)
-        ]
-        snake.dead = False
+    # If we die; Game Over screen and spawn a new snake
+    if snake.dead:
+        screen.fill("black")
+        drawGrid()
+        messageToScreen(screen, SW, SH, "Game Over!", "white", 3)
+        messageToScreen(
+            screen, SW, SH, f"You got {len(snake.body) - 1} points", "white", 2
+        )
+        # Start a new game and create a new snake if ENTER is pressed
+        messageToScreen(screen, SW, SH, "Press Enter to restart", "white", 1.5)
+        if event.key == pygame.K_RETURN:
+            snake.x, snake.y = BLOCK_SIZE, BLOCK_SIZE
+            # Snake will move to the right when the game stars
+            snake.xdir = 1
+            snake.ydir = 0
+
+            snake.head = pygame.Rect(snake.x, snake.y, BLOCK_SIZE, BLOCK_SIZE)
+            snake.body = [
+                pygame.Rect(snake.x - BLOCK_SIZE, snake.y, BLOCK_SIZE, BLOCK_SIZE)
+            ]
+            snake.dead = False
 
     pygame.display.update()
     clock.tick(10)
